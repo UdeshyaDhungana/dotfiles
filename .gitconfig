@@ -1,0 +1,12 @@
+[user]
+	name = Udeshya Dhungana
+	email = udeshyadhungana1@gmail.com
+	username = UdeshyaDhungana
+
+[core]
+	editor = vim
+
+[github]
+	user = UdeshyaDhungana
+[credential]
+	helper = store
