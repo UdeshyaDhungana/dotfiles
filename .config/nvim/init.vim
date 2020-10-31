@@ -2,8 +2,9 @@
 set nocompatible            " disable compatibility to old-time vi
 set showmatch               " show matching brackets.
 set ignorecase              " case insensitive matching
-set mouse=v                 " middle-click paste with mouse
-set hlsearch                " highlight search results
+"set mouse=a                 " middle-click paste with mouse
+set nohlsearch              " no highlighting on searching
+
 "Tabs and spaces here
 set expandtab               " convert tabs to spaces
 set tabstop=2               " number of columns occupied by a tab character
@@ -11,144 +12,105 @@ set softtabstop=2           " see multiple spaces as tabstops so <BS> does the r
 set shiftwidth=2            " width for autoindents
 set autoindent              " indent a new line the same amount as the line just typed
 set number                  " add line numbers
-set wildmode=longest,list   " get bash-like tab completions
-set cc=80                   " set an 80 column border for good coding style
+set wildmode=longest,list,full   " get bash-like tab completions
+set cc=70                   " set an 70 column border for good coding style
 filetype plugin indent on   " allows auto-indenting depending on file type
 syntax on                   " syntax highlighting
 set shortmess+=I            " Avoiding the 'Hit ENTER to continue' prompts
 set relativenumber          " Set relative line number
 set smartcase               " match different cases while searching
-set t_Co=256                " 256 color terminal
+colorscheme torte 
+
+"Luke
+"Split in non retarded manner
+set splitbelow splitright
 
 let mapleader = ","         "Map leader
 
 """"""""""""""""""""""" Personal Configuration """""""""""""""""""""""""""""""
+"""""""""""LEADERS MAPPINGS
 
-"Tab switching keystrokes
-ca tn tabnew
+"Easy window navigation
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
 
-" move to the previous/next tabpage.
-nnoremap <C-j> gT
-nnoremap <C-k> gt
-
-" " Go to last active tab 
-au TabLeave * let g:lasttab = tabpagenr()
-nnoremap <silent> <c-l> :exe "tabn ".g:lasttab<cr>
-vnoremap <silent> <c-l> :exe "tabn ".g:lasttab<cr>
-
-"AUTO BRACKET CLOSE
-
-"One liners
-inoremap [ []<left>
-inoremap { {}<left>
-inoremap ( ()<left>
-
-"multi line without terminator
-inoremap {<CR> {<CR>}<ESC>O
-inoremap (<CR> (<CR>)<ESC>O
-inoremap [<CR> [<CR>]<ESC>O
-
-"multi line terminating with semicolon
-inoremap {;<CR> {<CR>};<ESC>O
-inoremap (;<CR> (<CR>);<ESC>O
-inoremap [;<CR> [<CR>];<ESC>O
-
-"multi line terminating with comma
-inoremap {,<CR> {<CR>},<ESC>O
-inoremap (,<CR> (<CR>),<ESC>O
-inoremap [,<CR> [<CR>],<ESC>O
-
-"For functions
-inoremap ({<CR> (){<CR>}<ESC>O
-
-"for saving, :wq, :w, :x aren't productive
-nnoremap <leader>w :w<CR>
-nnoremap <leader>x :x<CR>
+"for saving
+nnoremap <leader><leader> :w<CR>
 nnoremap <leader>q :q!<CR>
 
-"no highlighting
-nnoremap <leader>n :noh<CR>
+let g:netrw_liststyle = 3
+let g:netrw_banner = 0
+let g:netrw_winsize = 20
 
+""""""""""""""""""""""""""""
 "swap A and a, because I move to append too frequently,
-"and pressing shift is cumbersome
-nnoremap a A
-nnoremap A a
+"nnoremap a A
+"nnoremap A a
+"I don't use it anymore, it feels un-vim-y
 
-"for indenting
-nnoremap <leader>i gg=G
+"for vertical split: I use most often
+nnoremap <leader>v :vsplit 
+nnoremap <leader>e :e 
+nnoremap <leader>s :Lexplore<CR>
 
 """""""""""""""""""""""""""""'PLUGINS"""""""""""""""""""""""""""""""""""""""""
-call plug#begin()
+call plug#begin() 
+
+"""""""""  ESSENTIAL PLUGINS  """""""""
+
 "conquerer: autocompletion = ✔️
 Plug 'neoclide/coc.nvim', {'branch':'release'}
 
-"Polyglot = ✔️ 
-Plug 'sheerun/vim-polyglot'
+"Status line
+Plug 'itchyny/lightline.vim'
 
-"status bar = ✔️
-Plug 'vim-airline/vim-airline'
+"Brackets matching = ✔️
+Plug 'jiangmiao/auto-pairs'
 
 "highlights yanked line = ✔️
 Plug 'machakann/vim-highlightedyank'
 
-"nerdtree = ✔️
-Plug 'preservim/nerdtree'
-
-"dart and flutter plugins = ✔️
-Plug 'dart-lang/dart-vim-plugin'
-
-"multiple cursors = ✔️
-Plug 'terryma/vim-multiple-cursors'
-
 "surround for vim = ✔️
 Plug 'tpope/vim-surround'
 
-"fzf file finder = ✔️
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+"Polyglot = ✔️ 
+Plug 'sheerun/vim-polyglot'
 
-"Gruvbox -> Theme
-Plug 'morhetz/gruvbox'
+"--> Language packs for polyglot
+Plug 'rust-lang/rust.vim'
+Plug 'vim-python/python-syntax'
+
+
+"I don't use these anymore
+"Plug 'HerringtonDarkholme/yats.vim'
+"Plug 'othree/html5.vim'
+"Plug 'plasticboy/vim-markdown'
+"Plug 'pangloss/vim-javascript'
+"Plug 'elzr/vim-json'
+"Plug 'MaxMEllon/vim-jsx-pretty'
 
 call plug#end()
 
 """""""""""""""""""""""""PLUGINS SETTINGS"""""""""""""""""""""""""""""""""""""
 
-"AIRLINE
-"Tabs on top
-let g:airline#extensions#tabline#enabled=1
-"Tabs name format
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-"For fancy arrows
-let g:airline_powerline_fonts = 1
-"Section z of airline
-let g:airline_section_z = '%{g:airline_symbols.linenr}%{g:airline_symbols.space}%3l/%L'
+"Status line
+let g:lightline = {
+      \   'active': {
+      \   'left': [ [ 'paste' ],
+      \             [ 'readonly', 'filename', 'modified', 'cocstatus' ] ]
+      \ },
+      \ 'component_function': {
+      \   'cocstatus': 'coc#status'
+      \ },
+      \ }
 
-"GRUVBOX
-"------- Theme -----
-set background=dark
-"-------------------
-colorscheme gruvbox
-g:gruvbox_italic 1
-g:gruvbox_termcolors 256
-g:gruvbox_contrast_dark=hard
-
-"NERDTREE
-let g:NERDTreeWinPos = "right"
-autocmd VimEnter * NERDTree | wincmd p
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-"Navigation
-:map <leader>l <C-w>l
-:map <leader>k <C-w>k
-:map <leader>j <C-w>j
-:map <leader>h <C-w>h
-
+"------------------------------------------------------------------------------
 "CONQUERER OF AUTOCOMPLETION
 "------
+
 " Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
@@ -160,21 +122,34 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
+
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+" position.
 if exists('*complete_info')
   inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 else
   inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 endif
 
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+"Neovim's native status line support
+"set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+"----------------- NATIVE -------------------------
 " Give more height for displaying messages.
-set cmdheight=2
+set cmdheight=1
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
 set updatetime=300
+"--------------------------------------------------
 
 " Applying codeAction to the selected region.
 " Example: `<leader>aap` for current paragraph
@@ -197,6 +172,13 @@ nmap <leader>f  <Plug>(coc-format-selected)
 
 " Show commands: LIFE SAVER
 nnoremap <silent><nowait> <leader>c  :<C-u>CocList commands<cr>
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
 """""""""""""""""""""""""""""""""FUZZY FILE FINDER""""""""""""""""""""""""""""
 " Ctrl-f for file finding
-nnoremap <silent> <C-f> :Files<CR>
+nnoremap <silent> <c-i> :FZF<CR>
