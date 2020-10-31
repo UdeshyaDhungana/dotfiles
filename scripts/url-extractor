@@ -1,0 +1,56 @@
+#!/usr/bin/python3
+# utility
+
+# This module returns the first URL on YouTube search page of the
+# supplied arguments
+
+import urllib.request as request
+import sys
+import re
+
+SEARH_Q_PREFIX = "https://www.youtube.com/results?search_query="
+VIDEO_URL_PREFIX = "https://www.youtube.com/watch?v="
+
+# function returns the url to first video in search page
+# argument: BeautifulSoup object of search page
+
+
+def request_html(search_term):
+    """Requests for youtube search page for given `search_item`"""
+    try:
+        search_page = request.urlopen(search_term)
+        search_page_text = search_page.read().decode()
+        return search_page_text
+    except:
+        raise Exception("HTTP request could not be completed")
+
+
+def get_url(search_page_text):
+    """Extracts URL of first video in given html page"""
+    link = re.findall(r"watch\?v=(\S{11})", search_page_text)
+    if len(link) == 0:
+        raise Exception("No video url found")
+    return VIDEO_URL_PREFIX + link[0]
+
+
+def main():
+    """Main program"""
+    if len(sys.argv) <= 1:
+        print("plays video from youtube")
+        print("Usage: yt keyword")
+    else:
+        try:
+            # prepare search url
+            song_name = '+'.join(sys.argv[1:])
+            search_term = SEARH_Q_PREFIX + song_name
+
+            search_page_text = request_html(search_term)
+            # get search page
+            video_url = get_url(search_page_text)
+            # Do shit with your url
+            print(video_url, file=sys.stdout, end="")
+        except Exception as final_exception:
+            print( str(final_exception) , file=sys.stderr)
+
+
+main()

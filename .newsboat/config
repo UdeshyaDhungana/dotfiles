@@ -1,0 +1,36 @@
+auto-reload yes
+max-items 15
+
+# unbind keys
+unbind-key ENTER
+unbind-key j
+unbind-key k
+unbind-key J
+unbind-key K
+
+# bind keys - vim style
+bind-key j down
+bind-key k up
+bind-key l open
+bind-key h quit
+
+#Colors
+color listnormal cyan default
+color listfocus black yellow standout bold
+color listnormal_unread blue default
+color listfocus_unread yellow default bold
+color info red black bold
+color article white default bold
+
+browser lynx
+
+#Open videos using mpv
+macro y set browser "mpv %u" ; open-in-browser; set browser "lynx %u"
+
+#Set browser to image viewer
+macro e set browser feh
+
+#Revert back to default browser
+macro d set browser lynx
+
+
