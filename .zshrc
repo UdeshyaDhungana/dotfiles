@@ -1,70 +1,79 @@
-# If you come from bash you might have to change your $PATH
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+# Install oh-my-zsh before using this file
+export ZSH="$HOME/.oh-my-zsh"
 
-# Path to your oh-my-zsh installation.
-export ZSH="/home/udeshya/.oh-my-zsh"
+ZSH_THEME="apple"
 
-#THEME
-ZSH_THEME="af-magic"
+# Uncomment one of the following lines to change the auto-update behavior
+# zstyle ':omz:update' mode disabled  # disable automatic updates
+# zstyle ':omz:update' mode auto      # update automatically without asking
+zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
-export UPDATE_ZSH_DAYS=7
+ zstyle ':omz:update' frequency 30
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS="true"
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
 
 # Uncomment the following line to disable auto-setting terminal title.
 DISABLE_AUTO_TITLE="true"
 
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(
-  zsh-autosuggestions
-  colored-man-pages
-  git
-  colorize
-)
+# plugins=()
 
 source $ZSH/oh-my-zsh.sh
 
-# export MANPATH="/usr/local/man:$MANPATH"
+# You may need to manually set your language environment
+export LANG=en_US.UTF-8
 
-################################ PERSONAL CONFIG #############################
-disable r
-bindkey -v
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='nvim'
+fi
 
-#Applications
-alias v="nvim"
-alias nb="newsboat"
-alias iv="feh --auto-zoom --scale-down"
-alias nnn="nnn -e"
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
 
-############# config files ##########
+# Personal aliases
+alias python='python3'
+alias pip='pip3'
 
-alias cfv="nvim /home/udeshya/.config/nvim/init.vim"
-alias sfv="nvim /home/udeshya/.zshrc"
+# listing aliases
+alias la='ls -a'
+alias ll='ls -lh'
+alias lal='ls -alh'
 
-#Above for parent
-alias ab="cd .."
-alias cls=clear
-alias suspend="i3lock --color=555555 --ignore-empty-password  && systemctl suspend"
+# git aliases
+alias g='git'
+alias gc='git clone'
+alias gcm='git commit -m'
+alias ga='git add'
+alias gs='git status'
 
-########### FUNCTIONS
-function cdl(){
-  cd $1 && ls
-}
 
-function music(){
-  url=$(url-extractor $*)
-  mpv "$url" --ytdl-format=worst --no-video
-}
+# Paths
+# flutter install
+export PATH="$PATH:/Users/udeshya/flutter/bin"
+export PATH="$PATH:/Users/udeshya/Library/Android/sdk"
+# openjdk install
+#export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+#export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"
+export PATH="/Users/udeshya/.nepdate/bin:$PATH"
 
-n (){
-  if [ -n $NNNLVL ] && [ "${NNNLVL:-0}" -ge 1 ]; then
-    echo "nnn is already running"
-    return
-  fi
-  export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
-  nnn "$@" -de
-
-  if [ -f "$NNN_TMPFILE" ]; then
-    . "$NNN_TMPFILE"
-    rm -f "$NNN_TMPFILE" > /dev/null
-  fi
-}
+# Nodejs16 installation
+export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
+export LDFLAGS="-L/opt/homebrew/opt/node@16/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/node@16/include"
